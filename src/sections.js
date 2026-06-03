@@ -87,7 +87,7 @@ function sectionExamples(info) {
 function sectionRoadmap(info) {
   const items = info.todos.length > 0
     ? info.todos.slice(0, 10).map((t) => `- [ ] ${t}`)
-    : [`- [ ] ${STUB('ajoute les prochaines étapes')}`];
+    : [STUB('ajoute les prochaines étapes')];
 
   return { id: 'roadmap', markdown: `## Roadmap\n\n${items.join('\n')}` };
 }

@@ -57,11 +57,12 @@ export function buildBadges(info) {
   if (info.hasCI && info.repoUrl) {
     const gh = parseGitHubRepo(info.repoUrl);
     if (gh) {
+      const workflowFile = info.ciWorkflowFile ?? 'ci.yml';
       badges.push({
         label: 'CI',
-        imgUrl: `https://img.shields.io/github/actions/workflow/status/${gh.owner}/${gh.repo}/ci.yml`,
+        imgUrl: `https://img.shields.io/github/actions/workflow/status/${gh.owner}/${gh.repo}/${encodeURIComponent(workflowFile)}`,
         linkUrl: `${info.repoUrl}/actions`,
-        reason: `Workflow CI détecté dans .github/workflows/ et dépôt GitHub connu`,
+        reason: `Workflow CI détecté dans .github/workflows/${workflowFile} et dépôt GitHub connu`,
       });
     }
   }

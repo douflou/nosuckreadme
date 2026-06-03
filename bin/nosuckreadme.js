@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name('nosuckreadme')
   .description("Generate a GitHub README that doesn't suck — honest badges, real install/usage, known limitations.")
-  .version('0.1.0')
+  .version('0.2.0')
   .argument('[path]', 'chemin du dépôt à scanner', '.')
   .option('-o, --output <file>', 'fichier de sortie (défaut : stdout)')
   .option('--stdout', 'forcer la sortie standard')

@@ -27,6 +27,7 @@
  * @property {string|null} usageExample
  * @property {string[]} examples                 - chemins/snippets détectés
  * @property {boolean} hasCI                      - .github/workflows/*.yml présent
+ * @property {string|null} ciWorkflowFile         - nom du premier fichier workflow détecté
  * @property {boolean} hasTests
  * @property {boolean} hasContributing
  * @property {string|null} repoUrl                - git remote origin, normalisé https
@@ -54,6 +55,7 @@ export function createProjectInfo(overrides = {}) {
     usageExample: null,
     examples: [],
     hasCI: false,
+    ciWorkflowFile: null,
     hasTests: false,
     hasContributing: false,
     repoUrl: null,

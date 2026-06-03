@@ -140,6 +140,7 @@ export async function scan(rootPath) {
   const langBytes = {};   // lang → octets
   let license = null;
   let hasCI = false;
+  let ciWorkflowFile = null;  // nom du premier fichier workflow détecté
   let hasTests = false;
   let hasContributing = false;
   const examples = [];
@@ -163,8 +164,8 @@ export async function scan(rootPath) {
 
       if (entry.isDirectory()) {
         if (IGNORE_DIRS.has(entry.name)) continue;
-        // Détecter examples/ et demo/
-        if (/^(examples?|demo)$/i.test(entry.name)) {
+        // Détecter dossiers d'exemples/démos/assets/docs
+        if (/^(examples?|demo|demos|assets|docs?)$/i.test(entry.name)) {
           const sub = await fs.readdir(path.join(dir, entry.name)).catch(() => []);
           for (const f of sub) examples.push(`${relPath}/${f}`);
         }
@@ -174,14 +175,22 @@ export async function scan(rootPath) {
 
       if (!entry.isFile()) continue;
 
-      // CI
-      if (CI_PATTERN.test(relPath)) hasCI = true;
+      // CI — retenir le nom du premier workflow (pour le badge)
+      if (CI_PATTERN.test(relPath)) {
+        hasCI = true;
+        if (!ciWorkflowFile) ciWorkflowFile = entry.name;
+      }
 
       // Tests
       if (!hasTests && TEST_PATTERNS.some(p => p.test(relPath))) hasTests = true;
 
       // Contributing
       if (/^CONTRIBUTING(\.md)?$/i.test(entry.name)) hasContributing = true;
+
+      // Fichiers démo à la racine (demo.tape, demo.sh, demo.gif, *.tape...)
+      if (!rel && /^demo\.|\.tape$/i.test(entry.name)) {
+        examples.push(entry.name);
+      }
 
       // LICENSE
       if (/^LICENSE(\.md|\.txt)?$/i.test(entry.name) && license === null) {
@@ -227,5 +236,5 @@ export async function scan(rootPath) {
 
   const repoUrl = getGitRemoteUrl(rootPath);
 
-  return { languages, license, hasCI, hasTests, hasContributing, examples, repoUrl, todos };
+  return { languages, license, hasCI, ciWorkflowFile, hasTests, hasContributing, examples, repoUrl, todos };
 }
