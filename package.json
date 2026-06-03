@@ -1,0 +1,42 @@
+{
+  "name": "nosuckreadme",
+  "version": "0.1.0",
+  "description": "Generate a GitHub README that doesn't suck — honest badges, real install/usage, known limitations.",
+  "type": "module",
+  "bin": {
+    "nosuckreadme": "bin/nosuckreadme.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/scanner.test.js test/detectors.test.js test/badges.test.js test/renderer.test.js",
+    "start": "node bin/nosuckreadme.js"
+  },
+  "keywords": [
+    "readme",
+    "generator",
+    "cli",
+    "markdown",
+    "github",
+    "documentation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/douflou-spec/nosuckreadme"
+  },
+  "homepage": "https://github.com/douflou-spec/nosuckreadme#readme",
+  "bugs": {
+    "url": "https://github.com/douflou-spec/nosuckreadme/issues"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "picocolors": "^1.0.0",
+    "smol-toml": "^1.2.0"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "license": "MIT"
+}

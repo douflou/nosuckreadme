@@ -1,0 +1,13 @@
+[project]
+name = "mypy-tool"
+version = "0.3.1"
+description = "A useful Python utility"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+[project.scripts]
+mypy-tool = "mypy_tool.cli:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.backends.legacy:build"
