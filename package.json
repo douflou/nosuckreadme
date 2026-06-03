@@ -23,11 +23,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/douflou-spec/nosuckreadme"
+    "url": "https://github.com/douflou/nosuckreadme"
   },
-  "homepage": "https://github.com/douflou-spec/nosuckreadme#readme",
+  "homepage": "https://github.com/douflou/nosuckreadme#readme",
   "bugs": {
-    "url": "https://github.com/douflou-spec/nosuckreadme/issues"
+    "url": "https://github.com/douflou/nosuckreadme/issues"
   },
   "dependencies": {
     "commander": "^12.0.0",
