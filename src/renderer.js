@@ -1,18 +1,18 @@
 /**
- * Assemble le README final à partir des sections.
- * Rendu DÉTERMINISTE : même entrée → même sortie (pas d'horodatage, pas d'aléa).
+ * Assemble the final README from the sections.
+ * Deterministic output: same input -> same output (no timestamps, no randomness).
  */
 import { buildSections } from './sections.js';
 
 /**
  * @param {import('./model.js').ProjectInfo} info
- * @returns {string} contenu Markdown du README, terminé par \n
+ * @returns {string} Markdown README content, ending with \n
  */
 export function render(info) {
   const sections = buildSections(info);
   return sections
     .map((s) => s.markdown.trim())
     .join('\n\n')
-    .replace(/\n{3,}/g, '\n\n')  // pas de triple saut de ligne
+    .replace(/\n{3,}/g, '\n\n')  // no triple line breaks
     .trim() + '\n';
 }

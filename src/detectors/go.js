@@ -1,6 +1,6 @@
 /**
- * Détecteur Go — match : go.mod.
- * Parse module path et go version via regex.
+ * Go detector: matches go.mod.
+ * Parses module path and Go version via regex.
  * @type {import('./base.js').Detector}
  */
 import fs from 'node:fs/promises';
@@ -22,7 +22,7 @@ export default {
     try {
       const content = await fs.readFile(path.join(rootPath, 'go.mod'), 'utf8');
 
-      // Parse : module <path>
+      // Parse: module <path>
       const moduleMark = content.match(/^module\s+(.+?)$/m);
       if (moduleMark) {
         const modulePath = moduleMark[1].trim();
@@ -31,7 +31,7 @@ export default {
         info.entrypoints.push({ name: info.name, target: 'main.go' });
       }
 
-      // Parse : go <version>
+      // Parse: go <version>
       const goMark = content.match(/^go\s+(.+?)$/m);
       if (goMark) {
         info.runtimeRequires = `Go ${goMark[1].trim()}`;
@@ -49,7 +49,7 @@ export default {
       // Usage example
       info.usageExample = info.name ? `${info.name} [args]` : 'go run main.go';
     } catch (e) {
-      // go.mod absent ou malformé → silently ignore
+      // go.mod missing or malformed: silently ignore.
     }
   },
 };

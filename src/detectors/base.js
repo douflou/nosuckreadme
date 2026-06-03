@@ -1,10 +1,10 @@
 /**
- * Interface d'un détecteur d'écosystème.
+ * Ecosystem detector interface.
  *
  * @typedef {Object} Detector
  * @property {string} ecosystem
- * @property {(rootPath: string) => Promise<boolean>} matches  - le détecteur s'applique-t-il ?
+ * @property {(rootPath: string) => Promise<boolean>} matches  - does this detector apply?
  * @property {(info: import('../model.js').ProjectInfo, rootPath: string) => Promise<void>} enrich
- *           - complète `info` avec les faits propres à cet écosystème (mutation en place).
+ *           - completes `info` with ecosystem-specific facts (in-place mutation).
  */
 export {};

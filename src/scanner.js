@@ -1,25 +1,25 @@
 /**
- * Scanner : parcourt un dépôt et agrège les signaux génériques
- * (langages, licence, CI, tests, contributing, examples, git remote, TODO/FIXME).
+ * Scanner: walks a repository and aggregates generic signals
+ * (languages, license, CI, tests, contributing, examples, git remote, TODO/FIXME).
  *
- * Logique pure — aucune dépendance aux détecteurs ni à la CLI.
+ * Pure logic, with no dependency on detectors or the CLI.
  */
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 
-/** Taille max d'un fichier scanné ligne par ligne (TODO/FIXME). Au-delà : ignoré. */
+/** Max size for a file scanned line by line (TODO/FIXME). Larger files are ignored. */
 const MAX_SCAN_BYTES = 1_000_000; // 1 Mo
 
-/** Dossiers à ignorer entièrement lors du parcours. */
+/** Directories to ignore entirely while walking. */
 const IGNORE_DIRS = new Set([
   '.git', 'node_modules', '.venv', 'venv', '__pycache__',
   'dist', 'build', 'target', 'coverage', '.next', '.nuxt',
   '.cache', 'out', '.turbo',
 ]);
 
-/** Mapping extension → nom de langage. */
+/** Extension -> language name mapping. */
 const EXT_LANG = {
   '.js': 'JavaScript', '.mjs': 'JavaScript', '.cjs': 'JavaScript',
   '.ts': 'TypeScript', '.mts': 'TypeScript', '.cts': 'TypeScript',
@@ -42,7 +42,7 @@ const EXT_LANG = {
   '.svelte': 'Svelte',
 };
 
-/** Mots-clés SPDX détectés dans le contenu du fichier LICENSE. */
+/** SPDX keywords detected in LICENSE file content. */
 const LICENSE_MARKERS = [
   { spdx: 'MIT', re: /\bMIT License\b/i },
   { spdx: 'Apache-2.0', re: /Apache License,?\s+Version 2\.0/i },
@@ -58,7 +58,7 @@ const LICENSE_MARKERS = [
   { spdx: 'Unlicense', re: /This is free and unencumbered software/i },
 ];
 
-/** Patterns indiquant la présence de tests. */
+/** Patterns indicating test presence. */
 const TEST_PATTERNS = [
   /^tests?[\\/]/i,
   /^__tests__[\\/]/i,
@@ -69,12 +69,12 @@ const TEST_PATTERNS = [
   /pytest\.ini$/, /setup\.cfg$/, /pyproject\.toml$/,
 ];
 
-/** Patterns indiquant la présence de CI. */
+/** Patterns indicating CI presence. */
 const CI_PATTERN = /^\.github[\\/]workflows[\\/].+\.ya?ml$/i;
 
 /**
- * Normalise une URL git remote vers https://github.com/owner/repo.
- * Gère les formats ssh (git@github.com:owner/repo.git) et https.
+ * Normalizes a git remote URL to https://github.com/owner/repo.
+ * Handles ssh (git@github.com:owner/repo.git) and https formats.
  * @param {string} raw
  * @returns {string|null}
  */
@@ -91,7 +91,7 @@ function normalizeGitUrl(raw) {
 }
 
 /**
- * Récupère l'URL du remote git origin (tolère l'absence de git / non-repo).
+ * Gets the git origin remote URL (tolerates missing git / non-repositories).
  * @param {string} rootPath
  * @returns {string|null}
  */
@@ -110,7 +110,7 @@ function getGitRemoteUrl(rootPath) {
 }
 
 /**
- * Détecte le SPDX à partir du contenu d'un fichier LICENSE.
+ * Detects the SPDX identifier from LICENSE file content.
  * @param {string} content
  * @returns {string|null}
  */
@@ -122,9 +122,9 @@ function detectLicense(content) {
 }
 
 /**
- * Parcourt le repo de façon récursive et collecte les signaux.
+ * Recursively walks the repository and collects signals.
  *
- * @param {string} rootPath  chemin absolu du dépôt
+ * @param {string} rootPath  absolute repository path
  * @returns {Promise<{
  *   languages: Array<[string, number]>,
  *   license: string|null,
@@ -137,26 +137,26 @@ function detectLicense(content) {
  * }>}
  */
 export async function scan(rootPath) {
-  const langBytes = {};   // lang → octets
+  const langBytes = {};   // lang -> bytes
   let license = null;
   let hasCI = false;
-  let ciWorkflowFile = null;  // nom du premier fichier workflow détecté
+  let ciWorkflowFile = null;  // name of the first detected workflow file
   let hasTests = false;
   let hasContributing = false;
   const examples = [];
   const todos = [];
 
   /**
-   * Visite récursive.
+   * Recursive visit.
    * @param {string} dir
-   * @param {string} rel  chemin relatif depuis rootPath
+   * @param {string} rel  path relative to rootPath
    */
   async function walk(dir, rel) {
     let entries;
     try {
       entries = await fs.readdir(dir, { withFileTypes: true });
     } catch {
-      return; // dossier illisible → on ignore
+      return; // unreadable directory: ignore it
     }
 
     for (const entry of entries) {
@@ -164,7 +164,7 @@ export async function scan(rootPath) {
 
       if (entry.isDirectory()) {
         if (IGNORE_DIRS.has(entry.name)) continue;
-        // Détecter dossiers d'exemples/démos/assets/docs
+        // Detect example/demo/assets/docs directories.
         if (/^(examples?|demo|demos|assets|docs?)$/i.test(entry.name)) {
           const sub = await fs.readdir(path.join(dir, entry.name)).catch(() => []);
           for (const f of sub) examples.push(`${relPath}/${f}`);
@@ -175,7 +175,7 @@ export async function scan(rootPath) {
 
       if (!entry.isFile()) continue;
 
-      // CI — retenir le nom du premier workflow (pour le badge)
+      // CI: keep the first workflow name for the badge.
       if (CI_PATTERN.test(relPath)) {
         hasCI = true;
         if (!ciWorkflowFile) ciWorkflowFile = entry.name;
@@ -187,7 +187,7 @@ export async function scan(rootPath) {
       // Contributing
       if (/^CONTRIBUTING(\.md)?$/i.test(entry.name)) hasContributing = true;
 
-      // Fichiers démo à la racine (demo.tape, demo.sh, demo.gif, *.tape...)
+      // Demo files at the root (demo.tape, demo.sh, demo.gif, *.tape...).
       if (!rel && /^demo\.|\.tape$/i.test(entry.name)) {
         examples.push(entry.name);
       }
@@ -198,23 +198,23 @@ export async function scan(rootPath) {
         if (content) license = detectLicense(content);
       }
 
-      // Langages (compter les octets des fichiers source)
+      // Languages (count source file bytes).
       const ext = path.extname(entry.name).toLowerCase();
       const lang = EXT_LANG[ext];
       if (lang) {
         const stat = await fs.stat(path.join(dir, entry.name)).catch(() => null);
         if (stat) langBytes[lang] = (langBytes[lang] ?? 0) + stat.size;
 
-        // TODO/FIXME — uniquement les VRAIS marqueurs de commentaire (`TODO:` / `FIXME:`),
-        // pas n'importe quelle ligne contenant le mot. Précision > exhaustivité :
-        // mieux vaut rater un TODO que polluer la roadmap avec des faux positifs.
-        // On saute les gros fichiers (minifiés/générés) : pas de TODO utile + coût mémoire.
+        // TODO/FIXME: only real comment markers (`TODO:` / `FIXME:`), not any line
+        // containing the word. Precision beats exhaustiveness: it is better to miss
+        // a TODO than pollute the roadmap with false positives.
+        // Skip large generated/minified files: little useful TODO value, higher memory cost.
         if (todos.length < 20 && stat && stat.size <= MAX_SCAN_BYTES) {
           const content = await fs.readFile(path.join(dir, entry.name), 'utf8').catch(() => null);
           if (content) {
             for (const line of content.split('\n')) {
               if (todos.length >= 20) break;
-              // Doit ressembler à un commentaire : marqueur de commentaire + TODO/FIXME + ':'
+              // Must look like a comment: comment marker + TODO/FIXME + ':'.
               const m = line.match(/(?:\/\/|#|\*|<!--|;)\s*(TODO|FIXME)\b\s*:\s*(.+)/i);
               if (m) {
                 const text = m[2].trim().replace(/\s*(\*\/|-->)\s*$/, '').slice(0, 100);
@@ -230,7 +230,7 @@ export async function scan(rootPath) {
 
   await walk(rootPath, '');
 
-  // Trier les langages par octets décroissants
+  // Sort languages by descending byte count.
   const languages = Object.entries(langBytes)
     .sort((a, b) => b[1] - a[1]);
 

@@ -1,44 +1,44 @@
 /**
- * Modèle de données central de nosuckreadme.
+ * Central data model for nosuckreadme.
  *
- * Tout transite par un seul objet `ProjectInfo`. Les détecteurs le remplissent
- * avec des FAITS RÉELS uniquement ; le rendu le consomme. Un champ inconnu vaut
- * `null` ou `[]` — jamais une valeur inventée.
+ * Everything flows through a single `ProjectInfo` object. Detectors fill it
+ * with real facts only, and the renderer consumes it. An unknown field is
+ * `null` or `[]`, never an invented value.
  *
  * @typedef {Object} Entrypoint
- * @property {string} name    - commande / binaire exposé
- * @property {string} target  - module:fonction, script npm, ou chemin
+ * @property {string} name    - exposed command / binary
+ * @property {string} target  - module:function, npm script, or path
  *
  * @typedef {Object} Badge
  * @property {string} label              - ex. "license"
- * @property {string} imgUrl             - URL de l'image (shields.io)
- * @property {string|null} linkUrl       - lien cliquable, ou null
- * @property {string} reason             - POURQUOI ce badge existe (fait justificatif)
+ * @property {string} imgUrl             - image URL (shields.io)
+ * @property {string|null} linkUrl       - clickable link, or null
+ * @property {string} reason             - why this badge exists (supporting fact)
  *
  * @typedef {Object} ProjectInfo
  * @property {string} name
  * @property {string|null} description
  * @property {("node"|"python"|"rust"|"go"|"generic")} ecosystem
  * @property {string|null} version
- * @property {string|null} license               - identifiant SPDX, ex. "MIT"
- * @property {Array<[string, number]>} languages - [["JavaScript", 1240], ...] (octets), trié desc
+ * @property {string|null} license               - SPDX identifier, e.g. "MIT"
+ * @property {Array<[string, number]>} languages - [["JavaScript", 1240], ...] (bytes), sorted desc
  * @property {string|null} installCmd
  * @property {Entrypoint[]} entrypoints
  * @property {string|null} usageExample
- * @property {string[]} examples                 - chemins/snippets détectés
- * @property {boolean} hasCI                      - .github/workflows/*.yml présent
- * @property {string|null} ciWorkflowFile         - nom du premier fichier workflow détecté
+ * @property {string[]} examples                 - detected paths/snippets
+ * @property {boolean} hasCI                      - .github/workflows/*.yml present
+ * @property {string|null} ciWorkflowFile         - name of the first detected workflow file
  * @property {boolean} hasTests
  * @property {boolean} hasContributing
- * @property {string|null} repoUrl                - git remote origin, normalisé https
+ * @property {string|null} repoUrl                - git remote origin, normalized to https
  * @property {string|null} runtimeRequires        - engines.node / requires-python / ...
- * @property {string[]} todos                     - TODO/FIXME collectés → roadmap
- * @property {string[]} limitations               - limites inférées automatiquement
+ * @property {string[]} todos                     - collected TODO/FIXME items -> roadmap
+ * @property {string[]} limitations               - automatically inferred limitations
  * @property {Badge[]} badges
  */
 
 /**
- * Crée un ProjectInfo aux valeurs par défaut sûres (rien d'inventé).
+ * Creates a ProjectInfo with safe defaults (nothing invented).
  * @param {Partial<ProjectInfo>} [overrides]
  * @returns {ProjectInfo}
  */

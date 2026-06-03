@@ -25,89 +25,89 @@ function makeInfo(overrides = {}) {
   });
 }
 
-describe('renderer — structure', () => {
-  test('contient le titre h1', () => {
+describe('renderer - structure', () => {
+  test('contains the h1 title', () => {
     const out = render(makeInfo());
     assert.match(out, /^# my-tool/m);
   });
 
-  test('contient la section Installation', () => {
+  test('contains the Installation section', () => {
     const out = render(makeInfo());
     assert.match(out, /## Installation/);
     assert.match(out, /npx my-tool/);
   });
 
-  test('contient la section Usage', () => {
+  test('contains the Usage section', () => {
     const out = render(makeInfo());
     assert.match(out, /## Usage/);
     assert.match(out, /npx my-tool --help/);
   });
 
-  test('contient la section Roadmap', () => {
+  test('contains the Roadmap section', () => {
     const out = render(makeInfo());
     assert.match(out, /## Roadmap/);
   });
 
-  test('contient la section Licence', () => {
+  test('contains the License section', () => {
     const out = render(makeInfo());
-    assert.match(out, /## Licence/);
+    assert.match(out, /## License/);
     assert.match(out, /MIT/);
   });
 
-  test('pas de triple saut de ligne', () => {
+  test('has no triple line breaks', () => {
     const out = render(makeInfo());
     assert.doesNotMatch(out, /\n{3,}/);
   });
 
-  test('se termine par un seul \\n', () => {
+  test('ends with a single \\n', () => {
     const out = render(makeInfo());
-    assert.ok(out.endsWith('\n'), 'doit se terminer par \\n');
-    assert.ok(!out.endsWith('\n\n'), 'ne doit pas se terminer par \\n\\n');
+    assert.ok(out.endsWith('\n'), 'should end with \\n');
+    assert.ok(!out.endsWith('\n\n'), 'should not end with \\n\\n');
   });
 });
 
-describe('renderer — stubs pour données manquantes', () => {
-  test('description nulle → stub balisé', () => {
+describe('renderer - stubs for missing data', () => {
+  test('null description -> marked stub', () => {
     const out = render(makeInfo({ description: null }));
     assert.match(out, /<!-- TODO\(nosuckreadme\)/);
   });
 
-  test('installCmd nul → stub balisé', () => {
+  test('null installCmd -> marked stub', () => {
     const out = render(makeInfo({ installCmd: null }));
     assert.match(out, /<!-- TODO\(nosuckreadme\)/);
   });
 
-  test('pas de Contributing si hasContributing=false', () => {
+  test('no Contributing when hasContributing=false', () => {
     const out = render(makeInfo({ hasContributing: false }));
     assert.doesNotMatch(out, /## Contributing/);
   });
 
-  test('Contributing présent si hasContributing=true', () => {
+  test('Contributing present when hasContributing=true', () => {
     const out = render(makeInfo({ hasContributing: true }));
     assert.match(out, /## Contributing/);
   });
 });
 
-describe('renderer — Limites connues inférées', () => {
-  test('hasTests=false → limite "Pas de suite de tests"', () => {
+describe('renderer - inferred known limitations', () => {
+  test('hasTests=false -> "No test suite yet" limitation', () => {
     const out = render(makeInfo({ hasTests: false }));
-    assert.match(out, /Pas de suite de tests/);
+    assert.match(out, /No test suite yet\./);
   });
 
-  test('hasTests=true → pas de limite tests', () => {
+  test('hasTests=true -> no tests limitation', () => {
     const out = render(makeInfo({ hasTests: true }));
-    assert.doesNotMatch(out, /Pas de suite de tests/);
+    assert.doesNotMatch(out, /No test suite yet\./);
   });
 
-  test('beaucoup de todos → limite "évolution active"', () => {
+  test('many todos -> "active development" limitation', () => {
     const todos = Array.from({ length: 15 }, (_, i) => `src/foo.js: // TODO: fix ${i}`);
     const out = render(makeInfo({ todos }));
-    assert.match(out, /évolution active/);
+    assert.match(out, /Code under active development/);
   });
 });
 
-describe('renderer — déterminisme', () => {
-  test('même entrée → sortie identique (2 appels)', () => {
+describe('renderer - determinism', () => {
+  test('same input -> identical output (2 calls)', () => {
     const info = makeInfo({
       badges: [
         { label: 'license', imgUrl: 'https://img.shields.io/badge/license-MIT-blue', linkUrl: 'LICENSE', reason: 'MIT' },
@@ -119,20 +119,20 @@ describe('renderer — déterminisme', () => {
     assert.equal(out1, out2);
   });
 
-  test('même entrée → sortie identique (collections triées)', () => {
+  test('same input -> identical output (sorted collections)', () => {
     const info1 = makeInfo({ languages: [['JavaScript', 5000], ['CSS', 1000]] });
     const info2 = makeInfo({ languages: [['JavaScript', 5000], ['CSS', 1000]] });
     assert.equal(render(info1), render(info2));
   });
 });
 
-describe('renderer — TOC (≥ 6 sections)', () => {
-  test('TOC présente si assez de sections', () => {
-    // Projet complet = 7 sections → TOC doit apparaître
+describe('renderer - TOC (>= 6 sections)', () => {
+  test('TOC present when enough sections exist', () => {
+    // Full project = 7 sections -> TOC should appear
     const out = render(makeInfo({
       hasContributing: true,
       examples: ['examples/basic.js'],
     }));
-    assert.match(out, /## Table des matières/);
+    assert.match(out, /## Table of contents/);
   });
 });

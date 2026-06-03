@@ -2,14 +2,14 @@
 
 Place `demo.gif` here.
 
-Pour le générer :
+To generate it:
 
 ```sh
-# 1. Installe vhs : https://github.com/charmbracelet/vhs
-# 2. Depuis la racine du projet :
+# 1. Install vhs: https://github.com/charmbracelet/vhs
+# 2. From the project root:
 vhs demo.tape
-# → produit assets/demo.gif (référencé dans le README)
+# → produces assets/demo.gif (referenced in the README)
 ```
 
-vhs est nettement plus simple sur macOS/Linux que sur Windows — c'est l'étape à faire
-sur le Mac si tu veux soigner la démo.
+vhs is much easier on macOS/Linux than on Windows - that's the step to do on the Mac
+if you want to polish the demo.

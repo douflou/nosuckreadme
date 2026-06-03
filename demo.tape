@@ -1,9 +1,9 @@
-# demo.tape — script vhs pour générer assets/demo.gif
-# Install vhs : https://github.com/charmbracelet/vhs
-# Génère le GIF :  vhs demo.tape
+# demo.tape - vhs script to generate assets/demo.gif
+# Install vhs: https://github.com/charmbracelet/vhs
+# Generate the GIF:  vhs demo.tape
 #
-# Astuce : lance ceci depuis un repo réel (ou depuis nosuckreadme lui-même)
-# pour montrer un vrai rendu.
+# Tip: run this from a real repo (or from nosuckreadme itself)
+# to show a real render.
 
 Output assets/demo.gif
 

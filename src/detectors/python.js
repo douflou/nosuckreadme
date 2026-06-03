@@ -1,5 +1,5 @@
 /**
- * Détecteur Python — match : pyproject.toml ou setup.py.
+ * Python detector: matches pyproject.toml or setup.py.
  * Parse name, description, version, requires-python, license, [project.scripts].
  * @type {import('./base.js').Detector}
  */
@@ -38,7 +38,7 @@ export default {
       info.ecosystem = 'python';
       info.runtimeRequires = project['requires-python'] ?? null;
 
-      // Entrypoints : [project.scripts]
+      // Entrypoints: [project.scripts]
       if (project.scripts && typeof project.scripts === 'object') {
         Object.entries(project.scripts).forEach(([name, target]) => {
           info.entrypoints.push({ name, target });
@@ -60,7 +60,7 @@ export default {
         info.usageExample = `import ${(info.name || 'package').replace(/-/g, '_')}`;
       }
     } catch (e) {
-      // pyproject.toml absent ou malformé → silently ignore
+      // pyproject.toml missing or malformed: silently ignore.
     }
   },
 };

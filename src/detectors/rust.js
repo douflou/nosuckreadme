@@ -1,7 +1,7 @@
 /**
- * Détecteur Rust — match : Cargo.toml.
+ * Rust detector: matches Cargo.toml.
  * Parse [package] : name, description, version, license, rust-version.
- * Détecte si binary (install) ou library (add).
+ * Detects whether the crate is a binary (install) or library (add).
  * @type {import('./base.js').Detector}
  */
 import fs from 'node:fs/promises';
@@ -33,7 +33,7 @@ export default {
       info.ecosystem = 'rust';
       info.runtimeRequires = pkg['rust-version'] ? `Rust ${pkg['rust-version']}` : null;
 
-      // Détecte s'il y a des binaires
+      // Detect whether binaries are declared.
       const hasBin = Array.isArray(toml.bin) && toml.bin.length > 0;
 
       // Entrypoints
@@ -57,7 +57,7 @@ export default {
         info.usageExample = `${info.name} = "0.x"  # in Cargo.toml`;
       }
     } catch (e) {
-      // Cargo.toml absent ou malformé → silently ignore
+      // Cargo.toml missing or malformed: silently ignore.
     }
   },
 };

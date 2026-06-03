@@ -1,5 +1,5 @@
 /**
- * Détecteur Node — match : package.json (prioritaire).
+ * Node detector: matches package.json (priority).
  * Parse name, description, version, bin, scripts, engines.node, license.
  * @type {import('./base.js').Detector}
  */
@@ -31,7 +31,7 @@ export default {
       info.ecosystem = 'node';
       info.runtimeRequires = pkg.engines?.node ?? null;
 
-      // Entrypoints : bin → [{ name, target }]
+      // Entrypoints: bin -> [{ name, target }]
       if (pkg.bin) {
         if (typeof pkg.bin === 'string') {
           info.entrypoints.push({ name: info.name || 'bin', target: pkg.bin });
@@ -57,7 +57,7 @@ export default {
         info.usageExample = `import { /* ... */ } from '${info.name}';`;
       }
     } catch (e) {
-      // package.json absent ou malformé → silently ignore
+      // package.json missing or malformed: silently ignore.
     }
   },
 };

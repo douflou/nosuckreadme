@@ -8,25 +8,25 @@ import { selectDetector } from '../src/detectors/index.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixtures = path.join(__dirname, 'fixtures');
 
-describe('détecteur — sélection', () => {
-  test('node_proj → détecteur Node', async () => {
+describe('detector - selection', () => {
+  test('node_proj -> Node detector', async () => {
     const d = await selectDetector(path.join(fixtures, 'node_proj'));
     assert.equal(d.ecosystem, 'node');
   });
 
-  test('python_proj → détecteur Python', async () => {
+  test('python_proj -> Python detector', async () => {
     const d = await selectDetector(path.join(fixtures, 'python_proj'));
     assert.equal(d.ecosystem, 'python');
   });
 
-  test('bare → détecteur Generic', async () => {
+  test('bare -> Generic detector', async () => {
     const d = await selectDetector(path.join(fixtures, 'bare'));
     assert.equal(d.ecosystem, 'generic');
   });
 });
 
-describe('Node détecteur — enrich', () => {
-  test('remplit name, version, license, installCmd', async () => {
+describe('Node detector - enrich', () => {
+  test('fills name, version, license, installCmd', async () => {
     const d = await selectDetector(path.join(fixtures, 'node_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'node_proj'));
@@ -38,7 +38,7 @@ describe('Node détecteur — enrich', () => {
     assert.ok(info.usageExample);
   });
 
-  test('détecte bin → entrypoints', async () => {
+  test('detects bin -> entrypoints', async () => {
     const d = await selectDetector(path.join(fixtures, 'node_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'node_proj'));
@@ -47,7 +47,7 @@ describe('Node détecteur — enrich', () => {
     assert.equal(info.entrypoints[0].name, 'my-node-tool');
   });
 
-  test('parse engines.node → runtimeRequires', async () => {
+  test('parses engines.node -> runtimeRequires', async () => {
     const d = await selectDetector(path.join(fixtures, 'node_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'node_proj'));
@@ -56,8 +56,8 @@ describe('Node détecteur — enrich', () => {
   });
 });
 
-describe('Python détecteur — enrich', () => {
-  test('remplit name, version, license, installCmd', async () => {
+describe('Python detector - enrich', () => {
+  test('fills name, version, license, installCmd', async () => {
     const d = await selectDetector(path.join(fixtures, 'python_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'python_proj'));
@@ -68,7 +68,7 @@ describe('Python détecteur — enrich', () => {
     assert.match(info.installCmd, /pip/);
   });
 
-  test('détecte [project.scripts] → entrypoints', async () => {
+  test('detects [project.scripts] -> entrypoints', async () => {
     const d = await selectDetector(path.join(fixtures, 'python_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'python_proj'));
@@ -77,7 +77,7 @@ describe('Python détecteur — enrich', () => {
     assert.equal(info.entrypoints[0].name, 'mypy-tool');
   });
 
-  test('parse requires-python → runtimeRequires', async () => {
+  test('parses requires-python -> runtimeRequires', async () => {
     const d = await selectDetector(path.join(fixtures, 'python_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'python_proj'));
@@ -86,8 +86,8 @@ describe('Python détecteur — enrich', () => {
   });
 });
 
-describe('Rust détecteur — enrich', () => {
-  test('remplit name, version, license, installCmd', async () => {
+describe('Rust detector - enrich', () => {
+  test('fills name, version, license, installCmd', async () => {
     const d = await selectDetector(path.join(fixtures, 'rust_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'rust_proj'));
@@ -98,7 +98,7 @@ describe('Rust détecteur — enrich', () => {
     assert.match(info.installCmd, /cargo install/);
   });
 
-  test('détecte [[bin]] → entrypoints', async () => {
+  test('detects [[bin]] -> entrypoints', async () => {
     const d = await selectDetector(path.join(fixtures, 'rust_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'rust_proj'));
@@ -107,7 +107,7 @@ describe('Rust détecteur — enrich', () => {
     assert.equal(info.entrypoints[0].name, 'my-rust-cli');
   });
 
-  test('parse rust-version → runtimeRequires', async () => {
+  test('parses rust-version -> runtimeRequires', async () => {
     const d = await selectDetector(path.join(fixtures, 'rust_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'rust_proj'));
@@ -116,8 +116,8 @@ describe('Rust détecteur — enrich', () => {
   });
 });
 
-describe('Go détecteur — enrich', () => {
-  test('remplit name depuis module path', async () => {
+describe('Go detector - enrich', () => {
+  test('fills name from module path', async () => {
     const d = await selectDetector(path.join(fixtures, 'go_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'go_proj'));
@@ -125,7 +125,7 @@ describe('Go détecteur — enrich', () => {
     assert.equal(info.name, 'my-go-tool');
   });
 
-  test('parse go version → runtimeRequires', async () => {
+  test('parses go version -> runtimeRequires', async () => {
     const d = await selectDetector(path.join(fixtures, 'go_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'go_proj'));
@@ -133,7 +133,7 @@ describe('Go détecteur — enrich', () => {
     assert.match(info.runtimeRequires, /Go 1\.21/);
   });
 
-  test('génère installCmd go', async () => {
+  test('generates go installCmd', async () => {
     const d = await selectDetector(path.join(fixtures, 'go_proj'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'go_proj'));
@@ -142,8 +142,8 @@ describe('Go détecteur — enrich', () => {
   });
 });
 
-describe('Generic détecteur — enrich', () => {
-  test('remplit name depuis nom du dossier', async () => {
+describe('Generic detector - enrich', () => {
+  test('fills name from folder name', async () => {
     const d = await selectDetector(path.join(fixtures, 'bare'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'bare'));
@@ -151,7 +151,7 @@ describe('Generic détecteur — enrich', () => {
     assert.equal(info.name, 'bare');
   });
 
-  test('génère installCmd generique', async () => {
+  test('generates generic installCmd', async () => {
     const d = await selectDetector(path.join(fixtures, 'bare'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'bare'));
@@ -160,7 +160,7 @@ describe('Generic détecteur — enrich', () => {
     assert.match(info.installCmd, /git clone/i);
   });
 
-  test('usageExample = défaut', async () => {
+  test('usageExample = default', async () => {
     const d = await selectDetector(path.join(fixtures, 'bare'));
     const info = createProjectInfo();
     await d.enrich(info, path.join(fixtures, 'bare'));

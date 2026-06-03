@@ -1,16 +1,16 @@
 /**
- * Construit les badges — UNIQUEMENT ceux adossés à un fait réel.
- * Chaque badge porte un `reason` non vide. Aucun badge décoratif ou non vérifiable.
+ * Builds badges, and only badges backed by a real fact.
+ * Each badge has a non-empty `reason`. No decorative or unverifiable badges.
  *
- * Interdits explicites :
- *  - "build passing" sans CI réelle
- *  - "coverage X%" sans rapport de couverture
- *  - badges décoratifs (PRs welcome, made with love, stars)
- *  - "downloads" sans source vérifiable
+ * Explicitly forbidden:
+ *  - "build passing" without real CI
+ *  - "coverage X%" without a coverage report
+ *  - decorative badges (PRs welcome, made with love, stars)
+ *  - "downloads" without a verifiable source
  */
 
 /**
- * Extrait owner/repo depuis une URL GitHub normalisée.
+ * Extracts owner/repo from a normalized GitHub URL.
  * @param {string|null} repoUrl
  * @returns {{ owner: string, repo: string }|null}
  */
@@ -28,7 +28,7 @@ function parseGitHubRepo(repoUrl) {
 export function buildBadges(info) {
   const badges = [];
 
-  // --- Licence (uniquement si détectée depuis le fichier LICENSE) ---
+  // --- License (only when detected from the LICENSE file) ---
   if (info.license) {
     const color = info.license === 'MIT' ? 'blue'
       : info.license.startsWith('GPL') ? 'red'
@@ -38,22 +38,22 @@ export function buildBadges(info) {
       label: 'license',
       imgUrl: `https://img.shields.io/badge/license-${encodeURIComponent(info.license)}-${color}`,
       linkUrl: 'LICENSE',
-      reason: `Fichier LICENSE présent et identifié comme ${info.license}`,
+      reason: `LICENSE file present and identified as ${info.license}`,
     });
   }
 
-  // --- Version statique (uniquement si version connue) ---
-  // Badge statique informational — on ne prétend pas connaître npm/PyPI en ligne.
+  // --- Static version (only when version is known) ---
+  // Static informational badge: do not pretend to know npm/PyPI online status.
   if (info.version) {
     badges.push({
       label: 'version',
       imgUrl: `https://img.shields.io/badge/version-${encodeURIComponent(info.version)}-informational`,
       linkUrl: null,
-      reason: `Version ${info.version} déclarée dans le manifeste`,
+      reason: `Version ${info.version} declared in the manifest`,
     });
   }
 
-  // --- CI / build (uniquement si .github/workflows/ présent ET repo GitHub connu) ---
+  // --- CI / build (only when .github/workflows/ exists and the GitHub repo is known) ---
   if (info.hasCI && info.repoUrl) {
     const gh = parseGitHubRepo(info.repoUrl);
     if (gh) {
@@ -62,12 +62,12 @@ export function buildBadges(info) {
         label: 'CI',
         imgUrl: `https://img.shields.io/github/actions/workflow/status/${gh.owner}/${gh.repo}/${encodeURIComponent(workflowFile)}`,
         linkUrl: `${info.repoUrl}/actions`,
-        reason: `Workflow CI détecté dans .github/workflows/${workflowFile} et dépôt GitHub connu`,
+        reason: `CI workflow detected in .github/workflows/${workflowFile} and GitHub repository known`,
       });
     }
   }
 
-  // --- Langage principal (uniquement si languages non vide) ---
+  // --- Main language (only when languages is not empty) ---
   if (info.languages.length > 0) {
     const [lang] = info.languages[0];
     const colorMap = {
@@ -81,11 +81,11 @@ export function buildBadges(info) {
       label: lang,
       imgUrl: `https://img.shields.io/badge/${encodeURIComponent(lang)}-${color}`,
       linkUrl: null,
-      reason: `${lang} est le langage principal détecté (${info.languages[0][1]} octets)`,
+      reason: `${lang} is the detected main language (${info.languages[0][1]} bytes)`,
     });
   }
 
-  // --- Runtime requis (node/python/etc.) si explicitement déclaré ---
+  // --- Required runtime (node/python/etc.) when explicitly declared ---
   if (info.runtimeRequires) {
     const isNode = info.ecosystem === 'node';
     const isPy   = info.ecosystem === 'python';
@@ -96,7 +96,7 @@ export function buildBadges(info) {
       label: `${label} ${info.runtimeRequires}`,
       imgUrl: `https://img.shields.io/badge/${label}-${ver}-${color}`,
       linkUrl: null,
-      reason: `Requirement runtime ${info.runtimeRequires} déclaré dans le manifeste`,
+      reason: `Runtime requirement ${info.runtimeRequires} declared in the manifest`,
     });
   }
 
